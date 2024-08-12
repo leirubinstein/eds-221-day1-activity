@@ -1,0 +1,58 @@
+---
+title: "Day 1 Afternoon tasks"
+author: "Leilanie Rubinstein"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+# attaching packages
+library(tidyverse)
+library(janitor)
+
+stl_lead <- read_csv(here::here("data", "stl_blood_lead.csv"))
+
+# basic exploration of the dataset
+skimr::skim(stl_lead)
+summary(stl_lead)
+dim(stl_lead)
+head(stl_lead)
+```
+
+```{r}
+# create a new data frame
+stl_lead_prop <- data.frame(stl_lead)
+
+# one additional column
+stl_lead_prop <- dplyr::mutate(.data = stl_lead_prop, prop_white = white/totalPop)
+```
+
+```{r}
+# create a scatterplot
+stl_lead_plot <- ggplot(data = stl_lead_prop, 
+                        aes(x = prop_white, y = pctElevated)) +
+  geom_point(aes(col = pctElevated), size = 2, show.legend = FALSE, alpha = 0.8) +
+  theme_minimal()
+  
+stl_lead_plot
+
+```
+
+```{r}
+# save the plot
+ggsave(here::here("figs", "stlplot.png"), width = 6, height = 5, units = "in")
+```
+
+```{r}
+# create a histogram
+pct_elevated_hist <- ggplot(data = stl_lead_prop,
+                            aes(x = pctElevated)) + 
+  geom_histogram(fill = "purple", color = "orange", linewidth = 0.5)
+pct_elevated_hist
+```
+
+```{r}
+ggsave(here::here("figs", "pct_elevated_hist.jpg"))
+```
+
